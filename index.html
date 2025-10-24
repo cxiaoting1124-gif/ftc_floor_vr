@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>樓層切換 VR</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <style>
+    /* 淡入淡出效果 */
+    iframe {
+      opacity: 1;
+      transition: opacity 0.5s ease-in-out;
+    }
+    iframe.fade-out {
+      opacity: 0;
+    }
+  </style>
+</head>
+
+<body class="relative">
+  <!-- VR 畫面 -->
+  <iframe id="vrFrame" src="/vr-floor/B15/index.xml" frameborder="0" class="w-full h-screen"></iframe>
+
+  <!-- 樓層清單 -->
+  <div class="absolute left-10 top-1/2 -translate-y-1/2 bg-white/90 px-6 py-3 rounded-lg shadow-md backdrop-blur-sm">
+    <ul id="floorList" class="space-y-2 text-[30px] leading-5"></ul>
+  </div>
+
+  <script>
+    /** 各樓層對應 VR XML 檔案 */
+    const FLOOR_VR_CONFIG = {
+      RF: "/vr-floor/Brf",
+      "21F": "/vr-floor/B21",
+      "20F": "/vr-floor/B20",
+      "19F": "/vr-floor/B19",
+      "18F": "/vr-floor/B18",
+      "17F": "/vr-floor/B17",
+      "16F": "/vr-floor/B16",
+      "15F": "/vr-floor/B15",
+      "13F": "/vr-floor/B13",
+      "12F": "/vr-floor/B12",
+      "11F": "/vr-floor/B11",
+      "10F": "/vr-floor/B10",
+      "9F": "/vr-floor/B9",
+      "8F": "/vr-floor/B8",
+      "7F": "/vr-floor/B7",
+      "6F": "/vr-floor/B6",
+      "5F": "/vr-floor/B5",
+      "3F": "/vr-floor/B3",
+    };
+
+    const floorList = document.getElementById("floorList");
+    const vrFrame = document.getElementById("vrFrame");
+    let currentFloor = "RF";
+
+    // 動態生成樓層按鈕
+    Object.keys(FLOOR_VR_CONFIG).forEach((floor) => {
+      const button = document.createElement("button");
+      button.textContent = floor;
+      button.className =
+        "block w-full font-bold text-center py-[6px] text-[#727171] hover:text-[#2A5E30] transition-colors";
+      button.addEventListener("click", () => {
+        if (currentFloor === floor) return;
+        currentFloor = floor;
+        changeFloor(FLOOR_VR_CONFIG[floor]);
+        updateActiveButton();
+      });
+      floorList.appendChild(button);
+    });
+
+    // 切換 VR 樓層（含淡入淡出）
+    function changeFloor(url) {
+      vrFrame.classList.add("fade-out");
+      setTimeout(() => {
+        vrFrame.src = url;
+        vrFrame.onload = () => vrFrame.classList.remove("fade-out");
+      }, 300);
+    }
+
+    // 標示目前選中樓層
+    function updateActiveButton() {
+      floorList.querySelectorAll("button").forEach((btn) => {
+        if (btn.textContent === currentFloor) {
+          btn.classList.add("text-[#2A5E30]");
+        } else {
+          btn.classList.remove("text-[#2A5E30]");
+        }
+      });
+    }
+
+    updateActiveButton();
+  </script>
+</body>
+</html>
