@@ -1,5 +1,21 @@
 # .gitignore
-vr-floor/**/tiles/
+vr-floor/B21/tiles/
+vr-floor/B20/tiles/
+vr-floor/B19/tiles/
+vr-floor/B18/tiles/
+vr-floor/B17/tiles/
+vr-floor/B16/tiles/
+vr-floor/B15/tiles/
+vr-floor/B13/tiles/
+vr-floor/B12/tiles/
+vr-floor/B11/tiles/
+vr-floor/B10/tiles/
+vr-floor/B9/tiles/
+vr-floor/B8/tiles/
+vr-floor/B7/tiles/
+vr-floor/B6/tiles/
+vr-floor/B5/tiles/
+vr-floor/B3/tiles/
 *.mp4
 *.mov
 *.zip
