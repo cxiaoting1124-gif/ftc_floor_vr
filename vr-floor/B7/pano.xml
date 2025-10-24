@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<panorama id="node1">
+  <input leveltilesize="510" levelingroll="0" overlap="1" levelingpitch="0" width="2500" leveltileurl="tiles/B7/cf_%c/l_%l/c_%x/tile_%y.jpg" levelbiashidpi="0.400" height="2500" levelbias="0.400">
+    <level predecode="0" width="2500" preload="0" height="2500"/>
+    <level predecode="0" width="1250" preload="0" height="1250"/>
+    <level predecode="0" width="625" preload="0" height="625"/>
+    <level predecode="1" width="312" preload="1" height="312"/>
+    <preview color="0x808080" strip="1"/>
+  </input>
+  <view fovmode="0" pannorth="0">
+    <start pan="0" tilt="0" fov="70"/>
+    <min pan="0" tilt="-90" fov="5"/>
+    <max pan="360" tilt="90" fov="120"/>
+  </view>
+  <userdata title="default" source="" datetime="2025:10:21 11:45:27" latitude="24.912505" tags="drive-download-20251020T031915Z-1-001" author="" copyright="" comment="" longitude="121.206984" info="" description=""/>
+  <hotspots width="180" wordwrap="1" height="20">
+    <label border="1" backgroundcolor="0xffffff" bordercolor="0x000000" textcolor="0x000000" borderradius="1" enabled="1" width="180" background="1" wordwrap="1" height="20" backgroundalpha="1" borderalpha="1" textalpha="1"/>
+    <polystyle mode="0" backgroundcolor="0x0000ff" bordercolor="0x0000ff" backgroundalpha="0.2509803921568627" borderalpha="1" handcursor="1"/>
+  </hotspots>
+  <media/>
+  <transition softedge="0" zoomfov="20" blendtime="1" enabled="0" type="crossdissolve" zoomout="0" zoomoutpause="1" zoomspeed="2" zoomin="0" blendcolor="0x000000"/>
+  <control sensitivity="8" dblclickfullscreen="0" lockedkeyboardzoom="0" simulatemass="1" lockedkeyboard="0" speedwheel="1" hideabout="0" lockedmouse="0" invertcontrol="1" invertwheel="0" contextfullscreen="0" lockedwheel="0"/>
+</panorama>
