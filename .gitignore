@@ -1,10 +1,4 @@
 # .gitignore
-
-
-
-vr-floor/B18/tiles/
-vr-floor/B17/tiles/
-vr-floor/B16/tiles/
 vr-floor/B15/tiles/
 vr-floor/B13/tiles/
 vr-floor/B12/tiles/
