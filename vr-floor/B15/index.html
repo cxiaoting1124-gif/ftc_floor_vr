@@ -49,14 +49,10 @@
 
 	<!-- pano2vr 主程式 -->
 	<script src="pano2vr_player.js"></script>
+	<script src="touch-fix.js"></script>
 	<script>
-		// 建立 pano2vr player
 		const pano = new pano2vrPlayer("container");
-
-		// 載入設定檔
-		window.addEventListener("load", () => {
-			pano.readConfigUrlAsync("pano.xml");
-		});
+		window.addEventListener("load", () => pano.readConfigUrlAsync("pano.xml"));
 	</script>
 </body>
 
