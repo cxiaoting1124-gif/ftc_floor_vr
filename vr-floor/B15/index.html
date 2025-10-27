@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>VR Viewer - Safari / PWA 觸控修正版2</title>
+  <title>3-VR Viewer - PWA 專用正式版</title>
 
   <!-- ✅ iOS / PWA 設定 -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
   <style>
     html, body {
@@ -23,6 +24,7 @@
       touch-action: none;
     }
 
+    /* pano2vr 容器設定 */
     #container {
       width: 100%;
       height: 100%;
@@ -32,6 +34,8 @@
       z-index: 0;
       touch-action: none;
       background: #000;
+      overflow: hidden;
+      -webkit-overflow-scrolling: auto;
     }
 
     ::-webkit-scrollbar {
@@ -42,20 +46,22 @@
 </head>
 
 <body>
+  <!-- pano2vr 容器 -->
   <div id="container">Loading VR...</div>
 
-  <!-- pano2vr 原始核心 -->
+  <!-- pano2vr 核心 player -->
   <script src="pano2vr_player.js"></script>
 
-  <!-- 🔧 修補檔 -->
+  <!-- 🔧 PWA 專用修補檔 -->
   <script src="pano2vr_player.fix.js"></script>
 
   <script>
-    // 初始化 pano2vr
+    // ✅ 初始化 pano2vr
     const pano = new pano2vrPlayer("container");
+
     window.addEventListener("load", () => {
       pano.readConfigUrlAsync("pano.xml");
-      console.log("✅ pano2vr player 已載入 pano.xml");
+      console.log("✅ pano2vr 已載入 pano.xml");
     });
   </script>
 </body>

@@ -1,11 +1,11 @@
 /**
- * pano2vr_player.fix.js — 最終正式版（支援 iOS Safari + PWA）
+ * pano2vr_player.fix.js — PWA 專用正式版（Safari + iOS PWA）
  * ---------------------------------------------------------------
- * 🧩 功能：
- * - 修補舊版 pano2vr_player.js 讓 iOS 能單指拖曳
- * - Safari 模式下使用 TouchEvent
- * - PWA 模式下自動切換為 PointerEvent（iOS 17 起）
- * - 延遲執行確保 pano2vr 初始化完成
+ * ✅ 改進重點：
+ * - 延遲啟動：確保 pano2vr_player 初始化完成
+ * - Safari 模式使用 TouchEvent
+ * - PWA 模式使用 PointerEvent + MouseEvent 備援
+ * - 全域阻止頁面滾動，避免事件被 WebKit 攔截
  * ---------------------------------------------------------------
  * 作者：ChatGPT Custom Patch 2025-10
  */
@@ -26,73 +26,103 @@
 
     console.log("✅ pano2vr player 準備完成，套用觸控修補");
 
-    // 🔒 防止舊 pano2vr 限制觸控
-    container.style.touchAction = "none";
-    container.style.webkitUserSelect = "none";
-    container.style.webkitTouchCallout = "none";
+    // 🔒 防止 pano2vr 鎖定手勢
+    Object.assign(container.style, {
+      touchAction: "none",
+      webkitUserSelect: "none",
+      webkitTouchCallout: "none",
+      overflow: "hidden",
+      webkitOverflowScrolling: "auto",
+    });
 
-    // 🧠 判斷目前是否為 PWA 模式
+    // 🧠 偵測 PWA 模式
     const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
 
-    if (isStandalone && window.PointerEvent) {
-      // ------------------------------------------------
-      // 📱 PWA 模式使用 PointerEvent（iOS 17 以上）
-      // ------------------------------------------------
-      console.log("📱 偵測到 PWA 模式，使用 PointerEvent 拖曳控制");
+    // 🧤 統一拖曳控制函式
+    const createDragHandler = () => {
+      let prevX = 0,
+        prevY = 0,
+        isDragging = false;
 
-      let prevX = 0, prevY = 0, isDragging = false;
-
-      container.addEventListener("pointerdown", (e) => {
+      const start = (x, y) => {
         isDragging = true;
-        prevX = e.clientX;
-        prevY = e.clientY;
-        container.setPointerCapture(e.pointerId);
-      });
+        prevX = x;
+        prevY = y;
+      };
 
-      container.addEventListener("pointermove", (e) => {
+      const move = (x, y) => {
         if (!isDragging) return;
-        const dx = e.clientX - prevX;
-        const dy = e.clientY - prevY;
+        const dx = x - prevX;
+        const dy = y - prevY;
         pano.setPan(pano.getPan() - dx * 0.25);
         pano.setTilt(pano.getTilt() - dy * 0.25);
-        prevX = e.clientX;
-        prevY = e.clientY;
-      });
+        prevX = x;
+        prevY = y;
+      };
 
-      container.addEventListener("pointerup", () => (isDragging = false));
-      container.addEventListener("pointercancel", () => (isDragging = false));
-    } else {
-      // ------------------------------------------------
-      // 🧤 Safari / 一般瀏覽器：使用 TouchEvent
-      // ------------------------------------------------
-      let startX = 0, startY = 0;
+      const end = () => (isDragging = false);
 
-      container.addEventListener("touchstart", (e) => {
-        if (e.touches.length === 1) {
-          startX = e.touches[0].clientX;
-          startY = e.touches[0].clientY;
+      // 📱 PointerEvent (PWA 模式)
+      if (isStandalone && window.PointerEvent) {
+        console.log("📱 使用 PointerEvent 拖曳控制 (PWA 模式)");
+        container.addEventListener("pointerdown", (e) => start(e.clientX, e.clientY));
+        container.addEventListener("pointermove", (e) => move(e.clientX, e.clientY));
+        container.addEventListener("pointerup", end);
+        container.addEventListener("pointercancel", end);
+      }
+
+      // 🧤 TouchEvent (Safari / Android)
+      container.addEventListener(
+        "touchstart",
+        (e) => {
+          if (e.touches.length === 1) {
+            start(e.touches[0].clientX, e.touches[0].clientY);
+            e.preventDefault();
+          }
+        },
+        { passive: false }
+      );
+
+      container.addEventListener(
+        "touchmove",
+        (e) => {
+          if (e.touches.length === 1) {
+            move(e.touches[0].clientX, e.touches[0].clientY);
+            e.preventDefault();
+          }
+        },
+        { passive: false }
+      );
+
+      container.addEventListener(
+        "touchend",
+        (e) => {
+          end();
           e.preventDefault();
-        }
-      }, { passive: false });
+        },
+        { passive: false }
+      );
 
-      container.addEventListener("touchmove", (e) => {
-        if (e.touches.length === 1) {
-          const dx = e.touches[0].clientX - startX;
-          const dy = e.touches[0].clientY - startY;
-          pano.setPan(pano.getPan() - dx * 0.25);
-          pano.setTilt(pano.getTilt() - dy * 0.25);
-          startX = e.touches[0].clientX;
-          startY = e.touches[0].clientY;
-          e.preventDefault();
-        }
-      }, { passive: false });
+      // 🖱️ MouseEvent (桌機 / Fallback)
+      container.addEventListener("mousedown", (e) => start(e.clientX, e.clientY));
+      container.addEventListener("mousemove", (e) => move(e.clientX, e.clientY));
+      container.addEventListener("mouseup", end);
 
-      container.addEventListener("touchend", (e) => e.preventDefault(), { passive: false });
-    }
+      console.log("🎉 pano2vr_player 修補完成（支援 Safari + PWA + 桌機 單指拖曳）");
+    };
 
-    console.log("🎉 pano2vr_player 修補完成（支援 Safari + PWA 單指拖曳）");
+    createDragHandler();
   };
 
   // ⏳ 延遲啟動確保 pano2vr 初始化完成
   window.addEventListener("load", () => setTimeout(waitForPano, 2000));
+
+  // 🛡️ 全域防止滾動（避免 PWA 吞事件）
+  document.addEventListener(
+    "touchmove",
+    (e) => {
+      if (e.target.id === "container") e.preventDefault();
+    },
+    { passive: false }
+  );
 })();
