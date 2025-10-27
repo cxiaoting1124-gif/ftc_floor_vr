@@ -19,14 +19,29 @@
   </hotspots>
   <media/>
   <transition softedge="0" zoomfov="20" blendtime="1" enabled="0" type="crossdissolve" zoomout="0" zoomoutpause="1" zoomspeed="2" zoomin="0" blendcolor="0x000000"/>
+  <!-- <control 
+  sensitivity="8" 
+  dblclickfullscreen="0" 
+  lockedkeyboardzoom="0" 
+  simulatemass="1" 
+  lockedkeyboard="0" 
+  speedwheel="1" 
+  hideabout="0" 
+  lockedmouse="0" 
+  invertcontrol="1" 
+  invertwheel="0" 
+  contextfullscreen="0" 
+  lockedwheel="0"/> -->
+
 <control 
-  usegyro="1"
-  webvr="1"
-  webvr_native="1"
+  usegyro="0"
+  webvr="0"
+  webvr_native="0"
   sensitivity="8"
   invertcontrol="1"
   dblclickfullscreen="0"
   lockedmouse="0"
 />
-  <!-- <control sensitivity="8" dblclickfullscreen="0" lockedkeyboardzoom="0" simulatemass="1" lockedkeyboard="0" speedwheel="1" hideabout="0" lockedmouse="0" invertcontrol="1" invertwheel="0" contextfullscreen="0" lockedwheel="0"/> -->
+
 </panorama>
+
