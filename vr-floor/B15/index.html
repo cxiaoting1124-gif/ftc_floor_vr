@@ -1,50 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>default</title>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="mobile-web-app-capable" content="yes" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-  <!-- ✅ PWA / iOS 全螢幕設定 -->
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="mobile-web-app-capable" content="yes" />
 
-  <!-- ✅ 防止 iPad Safari 將網站誤判為桌面版 -->
-  <meta name="format-detection" content="telephone=no" />
-  <meta name="HandheldFriendly" content="true" />
+	<style type="text/css" title="Default">
+		body,
+		div,
+		h1,
+		h2,
+		h3,
+		span,
+		p {
+			font-family: Verdana, Arial, Helvetica, sans-serif;
+		}
 
-  <title>VR Viewer</title>
+		/* fullscreen */
+		html {
+			height: 100%;
+		}
 
-  <style>
-    /* === Reset & Layout === */
-    html,
-    body {
-      height: 100%;
-      margin: 0;
-      overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: black;
-      touch-action: none;
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
-      overscroll-behavior: none;
-    }
+		body {
+			height: 100%;
+			margin: 0px;
+			overflow: hidden;
+			/* disable scrollbars */
+			font-size: 10pt;
+		}
 
-    canvas,
-    iframe {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
+		/* fix for scroll bars on webkit & >=Mac OS X Lion */
+		::-webkit-scrollbar {
+			background-color: rgba(0, 0, 0, 0.5);
+			width: 0.75em;
+		}
 
-    /* === Scrollbar fix for WebKit (可留可刪) === */
-    ::-webkit-scrollbar {
-      width: 0;
-      background: transparent;
-    }
-  </style>
+		::-webkit-scrollbar-thumb {
+			background-color: rgba(255, 255, 255, 0.5);
+		}
+	</style>
 </head>
 
 <body>
@@ -69,6 +69,28 @@
 	<!-- - - - - - - 8<- - - - - - cut here - - - - - 8<- - - - - - - -->
 	<!-- Hack needed to hide the url bar on iOS 9, iPhone 5s -->
 	<div style="width:1px;height:1px;"></div>
+	<script>
+		function enableGyro() {
+			if (typeof DeviceOrientationEvent !== "undefined" &&
+				typeof DeviceOrientationEvent.requestPermission === "function") {
+				DeviceOrientationEvent.requestPermission().then((res) => {
+					if (res === "granted") {
+						alert("✅ 體感已啟用，請重新操作 VR");
+					} else {
+						alert("❌ 使用者拒絕授權，無法啟用體感");
+					}
+				}).catch(console.error);
+			} else {
+				alert("裝置不需授權或不支援 DeviceOrientationEvent");
+			}
+		}
+	</script>
+
+	<button onclick="enableGyro()" style="position:absolute;top:20px;left:20px;z-index:999;
+         background:white;padding:8px 12px;border-radius:6px;">
+		啟用體感
+	</button>
+
 </body>
 
 </html>
