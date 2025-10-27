@@ -1,60 +1,63 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>VR Viewer - 修補版手指拖曳1</title>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>VR Viewer - 修補版手指拖曳1</title>
 
-  <!-- ✅ iOS / PWA 設定 -->
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<!-- ✅ iOS / PWA 設定 -->
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="mobile-web-app-capable" content="yes" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-  <style>
-    html, body {
-      margin: 0;
-      height: 100%;
-      overflow: hidden;
-      background: #000;
-      font-family: Verdana, Arial, Helvetica, sans-serif;
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
-      touch-action: none;
-    }
+	<style>
+		html,
+		body {
+			margin: 0;
+			height: 100%;
+			overflow: hidden;
+			background: #000;
+			font-family: Verdana, Arial, Helvetica, sans-serif;
+			-webkit-user-select: none;
+			-webkit-touch-callout: none;
+			touch-action: none;
+		}
 
-    #container {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0;
-      touch-action: none;
-    }
+		#container {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 0;
+			touch-action: none;
+		}
 
-    ::-webkit-scrollbar {
-      width: 0;
-      height: 0;
-    }
-  </style>
+		::-webkit-scrollbar {
+			width: 0;
+			height: 0;
+		}
+	</style>
 </head>
 
 <body>
-  <div id="container">Loading VR...</div>
+	<div id="container">Loading VR...</div>
 
-  <!-- pano2vr 主程式 -->
-  <script src="pano2vr_player.js"></script>
-  <!-- ✅ 加入修補檔 -->
-  <script src="pano2vr_player.fix.js"></script>
+	<!-- pano2vr 主程式 -->
+	<script src="pano2vr_player.js"></script>
+	<!-- ✅ 加入修補檔 -->
+	<script src="pano2vr_player.fix.js"></script>
 
-  <script>
-    // 初始化 pano2vr
-    const pano = new pano2vrPlayer("container");
-    window.addEventListener("load", () => {
-      pano.readConfigUrlAsync("pano.xml");
-      console.log("✅ pano2vr player 已載入 pano.xml");
-    });
-  </script>
+	<script>
+		// 初始化 pano2vr
+		const pano = new pano2vrPlayer("container");
+		window.addEventListener("load", () => {
+			pano.readConfigUrlAsync("pano.xml");
+			console.log("✅ pano2vr player 已載入 pano.xml");
+		});
+	</script>
 </body>
+
 </html>
