@@ -1,129 +1,96 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>VR Viewer</title>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>VR Viewer</title>
 
-  <!-- ✅ iOS / PWA 設定 -->
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<!-- ✅ iOS / PWA 設定 -->
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="mobile-web-app-capable" content="yes" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-  <style>
-    html, body {
-      margin: 0;
-      height: 100%;
-      overflow: hidden;
-      background: #000;
-      font-family: Verdana, Arial, Helvetica, sans-serif;
-    }
+	<style>
+		html,
+		body {
+			margin: 0;
+			height: 100%;
+			overflow: hidden;
+			background: #000;
+			font-family: Verdana, Arial, Helvetica, sans-serif;
+		}
 
-    /* pano2vr 全螢幕容器 */
-    #container {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0;
-      /* 👇 確保手勢拖曳事件能傳給 pano2vr */
-      touch-action: none;
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
-    }
+		/* pano2vr 全螢幕容器 */
+		#container {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 0;
+			/* 👇 確保手勢拖曳事件能傳給 pano2vr */
+			touch-action: none;
+			-webkit-user-select: none;
+			-webkit-touch-callout: none;
+		}
 
-    /* 啟用體感按鈕 */
-    #enableGyroBtn {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      z-index: 9999;
-      background: rgb(150, 30, 30);
-      border-radius: 8px;
-      padding: 10px 16px;
-      font-size: 16px;
-      font-weight: bold;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    #enableGyroBtn:active { transform: scale(0.97); }
+		/* 啟用體感按鈕 */
+		#enableGyroBtn {
+			position: fixed;
+			top: 20px;
+			left: 20px;
+			z-index: 9999;
+			background: rgb(150, 30, 30);
+			border-radius: 8px;
+			padding: 10px 16px;
+			font-size: 16px;
+			font-weight: bold;
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+			cursor: pointer;
+			transition: all 0.2s;
+		}
 
-    ::-webkit-scrollbar {
-      background-color: rgba(0, 0, 0, 0.5);
-      width: 0.75em;
-    }
-    ::-webkit-scrollbar-thumb {
-      background-color: rgba(255, 255, 255, 0.5);
-    }
-  </style>
+		#enableGyroBtn:active {
+			transform: scale(0.97);
+		}
+
+		::-webkit-scrollbar {
+			background-color: rgba(0, 0, 0, 0.5);
+			width: 0.75em;
+		}
+
+		::-webkit-scrollbar-thumb {
+			background-color: rgba(255, 255, 255, 0.5);
+		}
+	</style>
 </head>
 
 <body>
-  <!-- pano2vr 主容器 -->
-  <div id="container">
-    <br>Loading...<br><br>
-    This content requires HTML5 with CSS3 3D Transforms or WebGL.
-  </div>
+	<!-- pano2vr 主容器 -->
+	<div id="container">
+		<br>Loading...<br><br>
+		This content requires HTML5 with CSS3 3D Transforms or WebGL.
+	</div>
 
-  <!-- 啟用體感按鈕 -->
-  <div id="enableGyroBtn" onclick="enableGyro()">啟用體感</div>
+	<!-- 啟用體感按鈕 -->
+	<div id="enableGyroBtn" onclick="enableGyro()">啟用體感</div>
 
-  <!-- pano2vr 主程式 -->
-  <script src="pano2vr_player.js"></script>
+	<!-- pano2vr 主程式 -->
+	<script src="pano2vr_player.js"></script>
+	<script src="gyro-adapter.js"></script>
 
-  <script>
-    // 建立 pano2vr player 實例
-    const pano = new pano2vrPlayer("container");
+	<script>
+		const pano = new pano2vrPlayer("container");
+		window.addEventListener("load", () => pano.readConfigUrlAsync("pano.xml"));
 
-    // 初始化 pano2vr
-    window.addEventListener("load", () => {
-      pano.readConfigUrlAsync("pano.xml");
-    });
+		function enableGyro() {
+			gyroAdapter.enable(pano);
+			document.getElementById("enableGyroBtn").style.display = "none";
+		}
+	</script>
 
-    // 啟用體感函式（含舊版相容）
-    function enableGyro() {
-      const btn = document.getElementById("enableGyroBtn");
-
-      const activateGyro = () => {
-        // ✅ 相容不同 pano2vr player 版本的 gyro API
-        if (typeof pano.setGyroMode === "function") {
-          pano.setGyroMode(true);
-        } else if (typeof pano.setUseGyro === "function") {
-          pano.setUseGyro(true);
-        } else if (typeof pano.startGyro === "function") {
-          pano.startGyro();
-        } else if (pano.gyro && typeof pano.gyro.start === "function") {
-          pano.gyro.start();
-        } else {
-          alert("⚠️ 這個 pano2vr 版本沒有可用的 Gyro API，請確認 pano.xml 已設定 usegyro='1'");
-          return;
-        }
-
-        console.log("✅ Gyro Enabled");
-        btn.style.display = "none";
-      };
-
-      // iOS 需手動授權體感
-      if (typeof DeviceOrientationEvent !== "undefined" &&
-          typeof DeviceOrientationEvent.requestPermission === "function") {
-        DeviceOrientationEvent.requestPermission()
-          .then(response => {
-            if (response === "granted") {
-              activateGyro();
-            } else {
-              alert("請允許體感權限以啟用 VR 旋轉");
-            }
-          })
-          .catch(err => alert("授權錯誤：" + err));
-      } else {
-        // Android 或桌面裝置
-        activateGyro();
-      }
-    }
-  </script>
 </body>
+
 </html>
